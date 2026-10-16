@@ -34,11 +34,6 @@ export default async function Home() {
 							Creating Fun{" "}
 							<span className="text-(--studio-accent)">Adventures</span> for All
 						</h1>
-						<div className="mt-12 flex items-end justify-between gap-8">
-							<p className="max-w-md text-lg text-muted-foreground leading-8">
-								Maybe a little blurb would look good here?
-							</p>
-						</div>
 					</div>
 					<div className="relative z-10 flex justify-between border-border/60 border-t pt-4 text-muted-foreground text-xs">
 						<span>01</span>
