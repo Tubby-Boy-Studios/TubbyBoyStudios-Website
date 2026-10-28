@@ -6,10 +6,13 @@ import * as z from "zod";
 import { Button } from "~/components/ui/button";
 import { Spinner } from "~/components/ui/spinner";
 import { toast } from "~/components/ui/toast";
+import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
+import { useState } from "react";
 
 export const AffiliateManager = () => {
-	const affiliateLinks = api.affiliateLink.list.useQuery();
+	const [search, setSearch]=useState('')
+	const affiliateLinks = api.affiliateLink.list.useQuery({search});
 	const createLink = api.affiliateLink.create.useMutation();
 	const utils = api.useUtils();
 	const affiliateForm = useForm({
@@ -28,6 +31,8 @@ export const AffiliateManager = () => {
 			toast.add({ title: "Affiliate link created" });
 		},
 	});
+	
+	
 
 	return (
 		<main className="min-h-screen bg-background px-6 py-12 text-foreground lg:px-10">
@@ -150,8 +155,10 @@ export const AffiliateManager = () => {
 								Link activity
 							</h2>
 						</div>
+						
 						<span className="text-muted-foreground text-xs">Latest 20</span>
 					</div>
+					<Input className='bold' type='bordered' placeholder={"Search"} value={search} onChange={(e) => setSearch(e.target.value)} />
 					<div className="mt-6 overflow-x-auto border-border border-t">
 						{affiliateLinks.isLoading ? (
 							<p className="flex justify-center gap-3 py-10 text-muted-foreground">
@@ -174,6 +181,7 @@ export const AffiliateManager = () => {
 									</tr>
 								</thead>
 								<tbody>
+
 									{affiliateLinks.data.map((link) => (
 										<tr
 											key={link.id}

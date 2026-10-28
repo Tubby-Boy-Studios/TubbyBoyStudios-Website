@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { currentUser } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { and, count, desc, eq, gte, inArray, lt } from "drizzle-orm";
-import { z } from "zod";
+import { string, z } from "zod";
 import { env } from "~/env";
 import {
 	authedProcedure,
@@ -295,8 +295,15 @@ export const affiliateLinkRouter = createTRPCRouter({
 			});
 		}),
 
-	list: authedProcedure.query(async ({ ctx }) => {
+	list: authedProcedure
+		.input(
+			z.object({ 
+				search: z.string().toLowerCase(),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
 		const links = await ctx.db.query.affiliateLinks.findMany({
+			where: !input.search ? undefined : (affiliateLinks, { ilike }) => ilike(affiliateLinks.name, '%' + input.search + '%'),
 			orderBy: (affiliateLinks, { desc }) => [desc(affiliateLinks.createdAt)],
 			limit: 20,
 		});
